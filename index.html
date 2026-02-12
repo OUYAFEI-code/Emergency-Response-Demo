@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-ICC 智能应急指挥中心 | Demo V8</title>
+    <title>AI-ICC 智能应急指挥中心 | 引导优化版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,8 +15,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'pingan-orange': '#FF7D00', // 平安橙
-                        'side-bg': '#ffffff', // 修改为白底
+                        'pingan-orange': '#FF7D00',
+                        'side-bg': '#ffffff',
                         'light-bg': '#ffffff',
                         'light-panel': '#f3f4f6',
                         'light-border': '#e5e7eb',
@@ -31,133 +31,44 @@
                     animation: {
                         'scan': 'scan 3s linear infinite',
                         'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'breathe': 'breathe 2s ease-in-out infinite', // 新增呼吸动画
                     },
-                    keyframes: { scan: { '0%': { top: '0%' }, '100%': { top: '100%' } } }
+                    keyframes: { 
+                        scan: { '0%': { top: '0%' }, '100%': { top: '100%' } },
+                        breathe: {
+                            '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(255, 255, 255, 0.4)' },
+                            '50%': { transform: 'scale(1.05)', boxShadow: '0 0 12px 4px rgba(255, 255, 255, 0.2)' }
+                        }
+                    }
                 }
             }
         }
     </script>
     <style>
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-
-        .nav-badge {
-            position: absolute;
-            top: -2px;
-            right: 4px;
-            background-color: #ef4444;
-            color: white;
-            border-radius: 9999px;
-            font-size: 9px;
-            padding: 0 4px;
-            border: 1px solid #ffffff;
-            transform: scale(0.8);
-        }
-
-        .dashboard-container {
-            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
-        }
-
-        .timeline-node.active {
-            box-shadow: 0 0 10px #3b82f6;
-            border-color: #60a5fa;
-            background: #2563eb;
-        }
-
-        .timeline-node.done {
-            background: #059669;
-            border-color: #059669;
-        }
-
-        .doc-item:hover {
-            background-color: #f0f9ff;
-        }
-
-        .markdown-body h1 {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 0.5em;
-            color: #1e293b;
-        }
-
-        .markdown-body h2 {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 1em;
-            margin-bottom: 0.5em;
-            color: #334155;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 4px;
-        }
-
-        .markdown-body p {
-            margin-bottom: 0.8em;
-            line-height: 1.6;
-            color: #475569;
-        }
-
-        .markdown-body ul {
-            list-style-type: disc;
-            padding-left: 1.5em;
-            margin-bottom: 1em;
-            color: #475569;
-        }
-
-        .markdown-body table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1em;
-        }
-
-        .markdown-body th,
-        .markdown-body td {
-            border: 1px solid #e2e8f0;
-            padding: 6px;
-            text-align: left;
-            font-size: 0.9em;
-        }
-
-        .markdown-body th {
-            background-color: #f8fafc;
-        }
-
-        .sim-toast {
-            animation: slideInDown 0.5s ease-out forwards;
-        }
-
-        @keyframes slideInDown {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .nav-badge { position: absolute; top: -2px; right: 4px; background-color: #ef4444; color: white; border-radius: 9999px; font-size: 9px; padding: 0 4px; border: 1px solid #ffffff; transform: scale(0.8); }
+        .dashboard-container { background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8); }
+        .timeline-node.active { box-shadow: 0 0 10px #3b82f6; border-color: #60a5fa; background: #2563eb; }
+        .timeline-node.done { background: #059669; border-color: #059669; }
+        .doc-item:hover { background-color: #f0f9ff; }
+        .markdown-body h1 { font-size: 1.5em; font-weight: bold; margin-bottom: 0.5em; color: #1e293b; }
+        .markdown-body h2 { font-size: 1.2em; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em; color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        .markdown-body p { margin-bottom: 0.8em; line-height: 1.6; color: #475569; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; color: #475569; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+        .markdown-body th, .markdown-body td { border: 1px solid #e2e8f0; padding: 6px; text-align: left; font-size: 0.9em; }
+        .markdown-body th { background-color: #f8fafc; }
+        .sim-toast { animation: slideInDown 0.5s ease-out forwards; }
+        @keyframes slideInDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 
 <body class="bg-gray-100 h-screen w-screen overflow-hidden flex flex-col font-sans text-sm">
 
-    <!-- ================= 0. TOP SHELL (平安橙) ================= -->
+    <!-- 0. TOP SHELL -->
     <div class="h-10 w-full bg-pingan-orange flex items-center px-4 shrink-0 text-white font-bold z-[60] shadow-md">
         快乐平安
     </div>
@@ -165,119 +76,61 @@
     <!-- Main Content Wrapper -->
     <div class="flex-1 flex overflow-hidden">
 
-        <!-- ================= 1. FAR LEFT SIDEBAR (White) ================= -->
-        <aside
-            class="w-[70px] bg-white border-r border-light-border flex flex-col items-center py-4 shrink-0 text-gray-500 select-none z-50">
+        <!-- 1. FAR LEFT SIDEBAR -->
+        <aside class="w-[70px] bg-white border-r border-light-border flex flex-col items-center py-4 shrink-0 text-gray-500 select-none z-50">
             <div class="space-y-6 flex flex-col items-center w-full">
-                <!-- Mail -->
-                <div class="relative group cursor-pointer text-center">
-                    <i class="fa-solid fa-envelope text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">邮件</div>
-                    <div class="nav-badge">99+</div>
-                </div>
-                <!-- Message -->
-                <div class="relative group cursor-pointer text-center">
-                    <i class="fa-solid fa-comment-dots text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">消息</div>
-                    <div class="nav-badge">8</div>
-                </div>
-                <!-- Contacts -->
-                <div class="group cursor-pointer text-center">
-                    <i class="fa-regular fa-address-book text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">通讯录</div>
-                </div>
-                <!-- Schedule -->
-                <div class="group cursor-pointer text-center">
-                    <i class="fa-solid fa-calendar-days text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">日程</div>
-                </div>
-                <!-- Workspace -->
-                <div class="group cursor-pointer text-center">
-                    <i class="fa-brands fa-yahoo text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">工作台</div>
-                </div>
-                <!-- Sign -->
-                <div class="group cursor-pointer text-center">
-                    <i class="fa-solid fa-clipboard-check text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">签报</div>
-                </div>
-                <!-- Collaboration (Active) -->
-                <div
-                    class="group cursor-pointer text-center w-12 h-12 bg-blue-700/90 rounded-lg flex flex-col items-center justify-center text-white shadow-lg">
-                    <i class="fa-solid fa-share-nodes text-lg mb-0.5"></i>
-                    <div class="text-[9px] font-bold">协作</div>
-                </div>
-                <!-- Alerts -->
-                <div class="group cursor-pointer text-center mt-2">
-                    <i class="fa-solid fa-bell text-xl mb-1 group-hover:text-pingan-orange"></i>
-                    <div class="text-[10px]">告警</div>
-                </div>
+                <div class="relative group cursor-pointer text-center"><i class="fa-solid fa-envelope text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">邮件</div><div class="nav-badge">99+</div></div>
+                <div class="relative group cursor-pointer text-center"><i class="fa-solid fa-comment-dots text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">消息</div><div class="nav-badge">8</div></div>
+                <div class="group cursor-pointer text-center"><i class="fa-regular fa-address-book text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">通讯录</div></div>
+                <div class="group cursor-pointer text-center"><i class="fa-solid fa-calendar-days text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">日程</div></div>
+                <div class="group cursor-pointer text-center"><i class="fa-brands fa-yahoo text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">工作台</div></div>
+                <div class="group cursor-pointer text-center"><i class="fa-solid fa-clipboard-check text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">签报</div></div>
+                <div class="group cursor-pointer text-center w-12 h-12 bg-blue-700/90 rounded-lg flex flex-col items-center justify-center text-white shadow-lg"><i class="fa-solid fa-share-nodes text-lg mb-0.5"></i><div class="text-[9px] font-bold">协作</div></div>
+                <div class="group cursor-pointer text-center mt-2"><i class="fa-solid fa-bell text-xl mb-1 group-hover:text-pingan-orange"></i><div class="text-[10px]">告警</div></div>
             </div>
-            <!-- Bottom Avatar -->
             <div class="mt-auto relative">
-                <img src="https://i.pravatar.cc/150?u=1"
-                    class="w-10 h-10 rounded-full border-2 border-gray-200 opacity-80 hover:opacity-100 cursor-pointer">
+                <img src="https://i.pravatar.cc/150?u=1" class="w-10 h-10 rounded-full border-2 border-gray-200 opacity-80 hover:opacity-100 cursor-pointer">
                 <div class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full border border-white"></div>
             </div>
         </aside>
 
-        <!-- ================= 2. CHAT LIST ================= -->
+        <!-- 2. CHAT LIST -->
         <section class="w-[260px] bg-light-bg border-r border-light-border flex flex-col shrink-0">
             <div class="h-12 border-b border-light-border flex items-center justify-between px-3">
                 <h2 class="font-bold text-gray-800 text-sm">业务协作中心</h2>
-                <div class="flex space-x-2 text-gray-500"><i
-                        class="fa-solid fa-magnifying-glass cursor-pointer hover:text-blue-600"></i><i
-                        class="fa-solid fa-plus cursor-pointer hover:text-blue-600"></i></div>
+                <div class="flex space-x-2 text-gray-500"><i class="fa-solid fa-magnifying-glass cursor-pointer hover:text-blue-600"></i><i class="fa-solid fa-plus cursor-pointer hover:text-blue-600"></i></div>
             </div>
             <div class="flex border-b border-light-border text-xs">
-                <button class="flex-1 py-2 text-blue-600 border-b-2 border-blue-600 font-medium bg-blue-50">进行中
-                    10</button>
+                <button class="flex-1 py-2 text-blue-600 border-b-2 border-blue-600 font-medium bg-blue-50">进行中 10</button>
                 <button class="flex-1 py-2 text-gray-500 hover:bg-gray-50">已结束</button>
             </div>
             <div class="flex-1 overflow-y-auto bg-white">
                 <div class="p-3 bg-blue-50 border-l-4 border-blue-600 cursor-pointer hover:bg-blue-100 transition">
-                    <div class="flex justify-between items-start mb-1"><span
-                            class="font-bold text-gray-900 text-xs truncate w-32">演练NOC2025...</span><span
-                            class="text-xxs text-gray-500">11:53</span></div>
-                    <p class="text-xxs text-gray-600 truncate">AI管家: 施博瀚邀请您加入了该...</p>
+                    <div class="flex justify-between items-start mb-1"><span class="font-bold text-gray-900 text-xs truncate w-32">演练NOC2025...</span><span class="text-xxs text-gray-500">11:53</span></div>
+                    <p class="text-xxs text-gray-600 truncate">AI管家: 欧亚菲邀请您加入了该...</p>
                 </div>
                 <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer group">
-                    <div class="flex justify-between items-start mb-1"><span
-                            class="font-bold text-gray-700 text-xs group-hover:text-black">提效工程团队管理</span><span
-                            class="text-xxs text-gray-400">10:00</span></div>
+                    <div class="flex justify-between items-start mb-1"><span class="font-bold text-gray-700 text-xs group-hover:text-black">提效工程团队管理</span><span class="text-xxs text-gray-400">10:00</span></div>
                     <p class="text-xxs text-gray-400 group-hover:text-gray-500">AI管家: 无已延期任务...</p>
                 </div>
                 <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer group">
-                    <div class="flex justify-between items-start mb-1"><span
-                            class="font-bold text-gray-700 text-xs group-hover:text-black">融合版用户反馈</span><span
-                            class="text-xxs text-gray-400">09:00</span></div>
+                    <div class="flex justify-between items-start mb-1"><span class="font-bold text-gray-700 text-xs group-hover:text-black">融合版用户反馈</span><span class="text-xxs text-gray-400">09:00</span></div>
                     <p class="text-xxs text-gray-400">智能监控助手: ### 每周消息...</p>
                 </div>
                 <div class="p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer group">
-                    <div class="flex justify-between items-start mb-1"><span
-                            class="font-bold text-gray-700 text-xs group-hover:text-black">任务追踪开发小分队</span><span
-                            class="text-xxs text-gray-400">26-01-30</span></div>
+                    <div class="flex justify-between items-start mb-1"><span class="font-bold text-gray-700 text-xs group-hover:text-black">任务追踪开发小分队</span><span class="text-xxs text-gray-400">26-01-30</span></div>
                     <p class="text-xxs text-gray-400">🔴 今日逾期任务...</p>
                 </div>
             </div>
         </section>
 
-        <!-- ================= 3. DASHBOARD / DOC CENTER ================= -->
+        <!-- 3. DASHBOARD / DOC CENTER -->
         <main class="flex-1 flex flex-col relative overflow-hidden z-10 border-x border-gray-200">
             <!-- HEADER WITH TABS -->
-            <div
-                class="h-12 bg-gray-50 border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm relative z-30">
+            <div class="h-12 bg-gray-50 border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm relative z-30">
                 <div class="flex space-x-6 h-full items-end">
-                    <button onclick="switchTab('dashboard')" id="tab-dashboard"
-                        class="pb-3 text-sm font-bold text-gray-800 border-b-2 border-transparent transition relative top-[1px]"><i
-                            class="fa-solid fa-shield-virus mr-2"></i>应急指挥大屏</button>
-                    <button onclick="switchTab('docs')" id="tab-docs"
-                        class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition relative top-[1px]"><i
-                            class="fa-solid fa-folder-open mr-2"></i>文档中心</button>
-                    <button
-                        class="pb-3 text-sm font-medium text-gray-500 hover:text-gray-700 transition hidden lg:block">任务追踪仪表盘</button>
-                    <button
-                        class="pb-3 text-sm font-medium text-gray-500 hover:text-gray-700 transition hidden lg:block">任务列表</button>
+                    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="pb-3 text-sm font-bold text-gray-800 border-b-2 border-transparent transition relative top-[1px]"><i class="fa-solid fa-shield-virus mr-2"></i>应急指挥大屏</button>
+                    <button onclick="switchTab('docs')" id="tab-docs" class="pb-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 transition relative top-[1px]"><i class="fa-solid fa-folder-open mr-2"></i>文档中心</button>
                 </div>
                 <div class="flex items-center space-x-3 text-gray-400">
                     <i class="fa-solid fa-expand hover:text-gray-600 cursor-pointer"></i>
@@ -287,59 +140,35 @@
             </div>
 
             <div class="flex-1 relative bg-[#0a0a0a]">
-                <div id="sim-layer"
-                    class="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col space-y-2 pointer-events-none">
-                </div>
+                <div id="sim-layer" class="absolute top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
                 <!-- VIEW 1: DASHBOARD -->
                 <div id="view-dashboard" class="absolute inset-0 flex flex-col transition-opacity duration-300">
-                    <div
-                        class="h-10 bg-slate-900/90 border-b border-gray-800 flex items-center justify-between px-6 z-20">
+                    <div class="h-10 bg-slate-900/90 border-b border-gray-800 flex items-center justify-between px-6 z-20">
                         <div class="flex-1 flex justify-center">
                             <div class="flex items-center w-full max-w-lg relative">
                                 <div class="h-0.5 bg-gray-700 w-full absolute top-2.5 -z-10"></div>
                                 <div class="flex justify-between w-full text-xxs text-gray-400">
-                                    <div class="flex flex-col items-center gap-1">
-                                        <div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node done"
-                                            id="step-1"></div><span>事件发生</span>
-                                    </div>
-                                    <div class="flex flex-col items-center gap-1">
-                                        <div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node"
-                                            id="step-2"></div><span>应急响应</span>
-                                    </div>
-                                    <div class="flex flex-col items-center gap-1">
-                                        <div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node"
-                                            id="step-3"></div><span>故障定位</span>
-                                    </div>
-                                    <div class="flex flex-col items-center gap-1">
-                                        <div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node"
-                                            id="step-4"></div><span>应急决策</span>
-                                    </div>
-                                    <div class="flex flex-col items-center gap-1">
-                                        <div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node"
-                                            id="step-5"></div><span>处置恢复</span>
-                                    </div>
+                                    <div class="flex flex-col items-center gap-1"><div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node done" id="step-1"></div><span>事件发生</span></div>
+                                    <div class="flex flex-col items-center gap-1"><div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node" id="step-2"></div><span>应急响应</span></div>
+                                    <div class="flex flex-col items-center gap-1"><div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node" id="step-3"></div><span>故障定位</span></div>
+                                    <div class="flex flex-col items-center gap-1"><div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node" id="step-4"></div><span>应急决策</span></div>
+                                    <div class="flex flex-col items-center gap-1"><div class="w-5 h-5 rounded-full bg-gray-600 border-4 border-[#0a0a0a] timeline-node" id="step-5"></div><span>处置恢复</span></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col items-end"><span
-                                class="font-mono text-lg text-red-500 font-bold leading-none"
-                                id="dash-timer">00:00:00</span></div>
+                        <div class="flex flex-col items-end"><span class="font-mono text-lg text-red-500 font-bold leading-none" id="dash-timer">00:00:00</span></div>
                     </div>
-                    <div id="dashboard-grid"
-                        class="flex-1 grid grid-cols-12 dashboard-container opacity-30 blur-sm scale-95 transition-all duration-700">
+                    
+                    <div id="dashboard-grid" class="flex-1 grid grid-cols-12 dashboard-container opacity-30 blur-sm scale-95 transition-all duration-700">
                         <div class="col-span-3 border-r border-gray-800 bg-slate-900/30 p-4 flex flex-col gap-4">
                             <div class="border-l-4 border-blue-600 pl-4 py-1">
                                 <h3 class="text-blue-200 text-sm font-bold">NOC事件概况</h3>
                                 <div class="text-xxs text-gray-400 mt-1">NOC-20260202-001</div>
                             </div>
                             <div class="bg-black/40 rounded p-3 border border-gray-800">
-                                <div class="flex justify-between items-center mb-2"><span
-                                        class="text-xs text-gray-400">等级</span><span id="level-badge"
-                                        class="bg-gray-700 text-gray-300 px-2 rounded text-xxs font-bold">待定级</span>
-                                </div>
-                                <div class="text-xs text-gray-300 leading-relaxed" id="event-desc"><span
-                                        class="animate-pulse">等待监控数据接入...</span></div>
+                                <div class="flex justify-between items-center mb-2"><span class="text-xs text-gray-400">等级</span><span id="level-badge" class="bg-gray-700 text-gray-300 px-2 rounded text-xxs font-bold">待定级</span></div>
+                                <div class="text-xs text-gray-300 leading-relaxed" id="event-desc"><span class="animate-pulse">等待监控数据接入...</span></div>
                             </div>
                             <div class="flex-1 bg-black/40 rounded border border-gray-800 p-2 flex flex-col">
                                 <h4 class="text-xxs text-gray-500 mb-2">业务指标监控</h4>
@@ -347,19 +176,15 @@
                             </div>
                         </div>
                         <div class="col-span-6 relative flex flex-col">
-                            <div class="absolute inset-0 z-0 opacity-20"
-                                style="background-image: radial-gradient(#3b82f6 1px, transparent 1px); background-size: 20px 20px;">
-                            </div>
+                            <div class="absolute inset-0 z-0 opacity-20" style="background-image: radial-gradient(#3b82f6 1px, transparent 1px); background-size: 20px 20px;"></div>
                             <div class="relative z-10 w-full h-full p-4 flex items-center justify-center">
                                 <div id="topology-container" class="opacity-0 transition-opacity duration-1000"></div>
                             </div>
-                            <div class="absolute w-full h-1 bg-blue-500/50 blur-md animate-scan pointer-events-none">
-                            </div>
+                            <div class="absolute w-full h-1 bg-blue-500/50 blur-md animate-scan pointer-events-none"></div>
                         </div>
                         <div class="col-span-3 border-l border-gray-800 bg-slate-900/30 flex flex-col">
                             <div class="bg-black/50 p-2 border-b border-gray-800 flex justify-between items-center">
-                                <span class="text-xs text-blue-300 font-bold"><i
-                                        class="fa-solid fa-bars-progress mr-2"></i>处置进度 (SOP)</span>
+                                <span class="text-xs text-blue-300 font-bold"><i class="fa-solid fa-bars-progress mr-2"></i>处置进度 (SOP)</span>
                             </div>
                             <div id="sop-list" class="flex-1 overflow-y-auto p-3 space-y-4"></div>
                         </div>
@@ -371,38 +196,16 @@
                     <div class="p-4 bg-white">
                         <div class="relative max-w-3xl">
                             <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
-                            <input type="text" placeholder="搜索当前空间"
-                                class="w-full bg-gray-100 text-gray-700 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" placeholder="搜索当前空间" class="w-full bg-gray-100 text-gray-700 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                     <div class="flex-1 overflow-y-auto px-6 pb-6">
                         <h3 class="text-gray-500 text-xs font-bold mb-3 px-2">一级目录</h3>
                         <div class="space-y-1" id="file-list-root">
-                            <div
-                                class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-100 doc-item">
-                                <i class="fa-solid fa-caret-right text-gray-400 mr-2 w-4 text-center"></i><i
-                                    class="fa-solid fa-folder text-blue-400 mr-2"></i><span class="text-sm">协作待办库</span>
-                            </div>
-                            <div onclick="openReport('full')"
-                                class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-blue-50 doc-item group border border-transparent hover:border-blue-100 transition">
-                                <i
-                                    class="fa-solid fa-file-word text-blue-600 mr-2 ml-6 text-lg group-hover:scale-110 transition"></i>
-                                <div class="flex flex-col"><span
-                                        class="text-sm font-medium text-gray-800 group-hover:text-blue-700">NOC复盘报告</span><span
-                                        class="text-[10px] text-gray-400">更新于 刚刚 &bull; AI 自动生成</span></div>
-                                <span
-                                    class="ml-auto bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">New</span>
-                            </div>
-                            <div
-                                class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-100 doc-item">
-                                <i class="fa-solid fa-file-lines text-blue-400 mr-2 ml-6"></i><span
-                                    class="text-sm">协作中心使用指南</span>
-                            </div>
-                            <div
-                                class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-100 doc-item">
-                                <i class="fa-solid fa-file-excel text-green-500 mr-2 ml-6"></i><span
-                                    class="text-sm">2025年故障统计表.xlsx</span>
-                            </div>
+                            <div class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-100 doc-item"><i class="fa-solid fa-caret-right text-gray-400 mr-2 w-4 text-center"></i><i class="fa-solid fa-folder text-blue-400 mr-2"></i><span class="text-sm">协作待办库</span></div>
+                            <div onclick="openReport('full')" class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-blue-50 doc-item group border border-transparent hover:border-blue-100 transition"><i class="fa-solid fa-file-word text-blue-600 mr-2 ml-6 text-lg group-hover:scale-110 transition"></i><div class="flex flex-col"><span class="text-sm font-medium text-gray-800 group-hover:text-blue-700">NOC复盘报告</span><span class="text-[10px] text-gray-400">更新于 刚刚 &bull; AI 自动生成</span></div><span class="ml-auto bg-purple-100 text-purple-600 text-xs px-2 py-0.5 rounded-full">New</span></div>
+                            <div class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-100 doc-item"><i class="fa-solid fa-file-lines text-blue-400 mr-2 ml-6"></i><span class="text-sm">协作中心使用指南</span></div>
+                            <div class="flex items-center p-2 rounded cursor-pointer text-gray-700 hover:bg-gray-100 doc-item"><i class="fa-solid fa-file-excel text-green-500 mr-2 ml-6"></i><span class="text-sm">2025年故障统计表.xlsx</span></div>
                         </div>
                     </div>
                 </div>
@@ -411,146 +214,64 @@
                 <div id="doc-viewer" class="absolute inset-0 bg-black/50 z-50 hidden flex justify-end">
                     <div class="w-2/3 h-full bg-white shadow-2xl flex flex-col animate-slideInRight">
                         <div class="h-14 border-b border-gray-200 flex items-center justify-between px-6 bg-gray-50">
-                            <div class="flex items-center">
-                                <i class="fa-solid fa-file-lines text-blue-600 text-xl mr-3" id="viewer-icon"></i>
-                                <div>
-                                    <h2 class="text-sm font-bold text-gray-800" id="viewer-title">文档标题</h2>
-                                    <p class="text-xs text-gray-500">自动归档</p>
-                                </div>
-                            </div>
-                            <div class="flex space-x-3">
-                                <button onclick="closeReport()" class="text-gray-500 hover:text-red-500"><i
-                                        class="fa-solid fa-xmark text-lg"></i></button>
-                            </div>
+                            <div class="flex items-center"><i class="fa-solid fa-file-lines text-blue-600 text-xl mr-3" id="viewer-icon"></i><div><h2 class="text-sm font-bold text-gray-800" id="viewer-title">文档标题</h2><p class="text-xs text-gray-500">自动归档</p></div></div>
+                            <div class="flex space-x-3"><button onclick="closeReport()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>
                         </div>
-                        <div class="flex-1 overflow-y-auto p-8 bg-white">
-                            <div id="markdown-content" class="markdown-body max-w-3xl mx-auto"></div>
-                        </div>
+                        <div class="flex-1 overflow-y-auto p-8 bg-white"><div id="markdown-content" class="markdown-body max-w-3xl mx-auto"></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- CONTROLS -->
-            <div
-                class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-900/90 border border-gray-700 p-1.5 rounded-full flex gap-2 z-50 shadow-2xl backdrop-blur">
-                <button onclick="runScenario(1)"
-                    class="w-8 h-8 rounded-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs"
-                    title="自动感知">1</button>
-                <button onclick="runScenario(2)"
-                    class="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs"
-                    title="智能协同">2</button>
-                <button onclick="runScenario(3)"
-                    class="w-8 h-8 rounded-full bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs"
-                    title="决策升级">3</button>
-                <button onclick="runScenario(4)"
-                    class="w-8 h-8 rounded-full bg-green-600 hover:bg-green-500 text-white font-bold text-xs"
-                    title="复盘恢复">4</button>
+            <!-- 全新优化的向导式控制面板 -->
+            <div id="demo-guide-panel" class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-900/90 border border-gray-700 p-2 rounded-full flex gap-3 z-50 shadow-2xl backdrop-blur items-center transition-all duration-500">
+                <div class="text-white text-xs font-bold pl-2 pr-1 opacity-80"><i class="fa-solid fa-play mr-1 text-blue-400"></i> 演示向导</div>
+                <button id="guide-btn-1" onclick="executeStep(1)" class="relative px-4 py-1.5 rounded-full bg-red-600 text-white font-bold text-xs transition-all duration-300 ring-2 ring-red-400 ring-offset-2 ring-offset-gray-900 animate-breathe cursor-pointer">自动感知</button>
+                <button id="guide-btn-2" onclick="executeStep(2)" class="px-4 py-1.5 rounded-full bg-gray-700 text-gray-500 font-bold text-xs transition-all duration-300 cursor-not-allowed">智能协同</button>
+                <button id="guide-btn-3" onclick="executeStep(3)" class="px-4 py-1.5 rounded-full bg-gray-700 text-gray-500 font-bold text-xs transition-all duration-300 cursor-not-allowed">决策升级</button>
+                <button id="guide-btn-4" onclick="executeStep(4)" class="px-4 py-1.5 rounded-full bg-gray-700 text-gray-500 font-bold text-xs transition-all duration-300 cursor-not-allowed">复盘恢复</button>
             </div>
         </main>
 
-        <!-- ================= 4. CHAT WINDOW ================= -->
+        <!-- 4. CHAT WINDOW -->
         <section class="w-[340px] bg-light-panel flex flex-col shrink-0 border-l border-light-border">
             <div class="h-12 bg-white border-b border-light-border flex items-center justify-between px-4 shrink-0">
-                <div>
-                    <h2 id="chat-title" class="text-sm font-bold text-gray-800">演练NOC2025... (6)</h2>
-                    <div class="text-xxs text-gray-400">长期有效</div>
-                </div>
-                <div class="text-gray-400 space-x-3 text-xs"><i class="fa-solid fa-phone"></i><i
-                        class="fa-solid fa-video"></i><i class="fa-solid fa-ellipsis"></i></div>
+                <div><h2 id="chat-title" class="text-sm font-bold text-gray-800">演练NOC2025... (6)</h2><div class="text-xxs text-gray-400">长期有效</div></div>
+                <div class="text-gray-400 space-x-3 text-xs"><i class="fa-solid fa-phone"></i><i class="fa-solid fa-video"></i><i class="fa-solid fa-ellipsis"></i></div>
             </div>
             <div id="chat-box" class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f5f7fa]">
-                <div class="flex justify-center"><span
-                        class="bg-gray-200 text-gray-500 text-[10px] px-2 py-0.5 rounded">11:53</span></div>
-                <div class="flex justify-center"><span class="text-gray-400 text-[10px]">施博瀚邀请您加入了该群聊</span></div>
+                <div class="flex justify-center"><span class="bg-gray-200 text-gray-500 text-[10px] px-2 py-0.5 rounded">11:53</span></div>
+                <div class="flex justify-center"><span class="text-gray-400 text-[10px]">欧亚菲邀请您加入了该群聊</span></div>
             </div>
             <div class="bg-white border-t border-light-border p-3 shrink-0">
-                <div class="flex space-x-3 text-gray-500 text-sm mb-2 px-1"><i
-                        class="fa-regular fa-face-smile hover:text-blue-600 cursor-pointer"></i><i
-                        class="fa-solid fa-folder-open hover:text-blue-600 cursor-pointer"></i><i
-                        class="fa-solid fa-scissors hover:text-blue-600 cursor-pointer"></i><i
-                        class="fa-regular fa-message hover:text-blue-600 cursor-pointer"></i></div>
-                <textarea id="chat-input" rows="3" placeholder="发送给 演练NOC2025..."
-                    class="w-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-none resize-none focus:ring-0 p-0"></textarea>
+                <div class="flex space-x-3 text-gray-500 text-sm mb-2 px-1"><i class="fa-regular fa-face-smile hover:text-blue-600 cursor-pointer"></i><i class="fa-solid fa-folder-open hover:text-blue-600 cursor-pointer"></i><i class="fa-solid fa-scissors hover:text-blue-600 cursor-pointer"></i><i class="fa-regular fa-message hover:text-blue-600 cursor-pointer"></i></div>
+                <textarea id="chat-input" rows="3" placeholder="发送给 演练NOC2025..." class="w-full text-sm text-gray-800 placeholder-gray-400 bg-transparent border-none resize-none focus:ring-0 p-0"></textarea>
                 <div class="flex justify-between items-center mt-1">
-                    <div class="text-xxs text-gray-400 flex items-center cursor-pointer hover:text-blue-600"><i
-                            class="fa-solid fa-robot mr-1 text-purple-500"></i> 智能监控助手</div>
-                    <button
-                        class="bg-blue-100 text-blue-600 hover:bg-blue-200 text-xs px-4 py-1.5 rounded transition font-medium">发送</button>
+                    <div class="text-xxs text-gray-400 flex items-center cursor-pointer hover:text-blue-600"><i class="fa-solid fa-robot mr-1 text-purple-500"></i> 智能监控助手</div>
+                    <button class="bg-blue-100 text-blue-600 hover:bg-blue-200 text-xs px-4 py-1.5 rounded transition font-medium">发送</button>
                 </div>
             </div>
         </section>
     </div>
 
     <!-- Templates -->
-    <template id="tpl-ai-msg">
-        <div class="flex items-start space-x-2">
-            <div
-                class="w-8 h-8 rounded-full bg-purple-100 border border-purple-200 flex items-center justify-center shrink-0">
-                <i class="fa-solid fa-robot text-purple-600 text-xs"></i>
-            </div>
-            <div class="max-w-[90%]">
-                <div class="flex items-center space-x-2 mb-1"><span class="text-xs text-gray-500">智能监控助手</span></div>
-                <div
-                    class="bg-white border border-gray-200 rounded-lg p-3 text-xs text-gray-800 shadow-sm msg-content relative">
-                    <div
-                        class="absolute -left-1.5 top-3 w-3 h-3 bg-white border-l border-b border-gray-200 transform rotate-45">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-    <template id="tpl-user-msg">
-        <div class="flex items-start space-x-2 flex-row-reverse space-x-reverse">
-            <img src="https://i.pravatar.cc/150?u=1" class="w-8 h-8 rounded-full border border-gray-200">
-            <div class="max-w-[85%] flex flex-col items-end">
-                <div class="bg-blue-500 text-white rounded-lg p-2.5 text-xs text-left shadow-sm msg-content relative">
-                    <div class="absolute -right-1 top-3 w-2 h-2 bg-blue-500 transform rotate-45"></div>
-                </div>
-            </div>
-        </div>
-    </template>
-    <template id="tpl-other-msg">
-        <div class="flex items-start space-x-2">
-            <img src="https://i.pravatar.cc/150?u=3" class="w-8 h-8 rounded-full border border-gray-200 sender-avatar">
-            <div class="max-w-[85%]">
-                <div class="flex items-center space-x-2 mb-1"><span
-                        class="text-xs text-gray-500 sender-name">Name</span></div>
-                <div
-                    class="bg-gray-100 border border-gray-200 rounded-lg p-2.5 text-xs text-gray-700 shadow-sm msg-content relative">
-                    <div class="absolute -left-1 top-3 w-2 h-2 bg-gray-100 transform rotate-45"></div>
-                </div>
-            </div>
-        </div>
-    </template>
-    <template id="tpl-task-card">
-        <div class="mt-2 border border-blue-200 bg-blue-50 rounded-lg overflow-hidden">
-            <div class="bg-blue-100/50 p-2 border-b border-blue-200 flex justify-between items-center"><span
-                    class="text-blue-700 font-bold flex items-center text-xs"><i
-                        class="fa-solid fa-bolt mr-1.5"></i>任务下发</span><span
-                    class="text-blue-400 text-[10px] border border-blue-200 px-1 rounded">AI Auto</span></div>
-            <div class="p-3">
-                <div class="text-gray-800 font-bold text-sm mb-1 task-title">排查慢SQL</div>
-                <div class="text-gray-600 text-xs mb-3 leading-relaxed task-desc">检测到 DB_PROFIT CPU > 90%，请立即排查锁表情况。
-                </div>
-                <div
-                    class="flex justify-between items-center text-xxs text-gray-500 mb-3 bg-white p-2 rounded border border-gray-100">
-                    <span>责任人: <span class="text-blue-600 font-bold">@西西(DBA)</span></span><span>截止: <span
-                            class="text-red-500 font-bold">+10m</span></span>
-                </div>
-                <div class="flex gap-2"><button
-                        class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-1.5 rounded text-xs transition shadow-sm"
-                        onclick="completeTask(this)">接受任务</button><button
-                        class="flex-1 bg-white hover:bg-gray-50 text-gray-600 border border-gray-300 py-1.5 rounded text-xs transition">驳回</button>
-                </div>
-            </div>
-        </div>
-    </template>
+    <template id="tpl-ai-msg"><div class="flex items-start space-x-2"><div class="w-8 h-8 rounded-full bg-purple-100 border border-purple-200 flex items-center justify-center shrink-0"><i class="fa-solid fa-robot text-purple-600 text-xs"></i></div><div class="max-w-[90%]"><div class="flex items-center space-x-2 mb-1"><span class="text-xs text-gray-500">智能监控助手</span></div><div class="bg-white border border-gray-200 rounded-lg p-3 text-xs text-gray-800 shadow-sm msg-content relative"><div class="absolute -left-1.5 top-3 w-3 h-3 bg-white border-l border-b border-gray-200 transform rotate-45"></div></div></div></div></template>
+    <template id="tpl-user-msg"><div class="flex items-start space-x-2 flex-row-reverse space-x-reverse"><img src="https://i.pravatar.cc/150?u=1" class="w-8 h-8 rounded-full border border-gray-200"><div class="max-w-[85%] flex flex-col items-end"><div class="bg-blue-500 text-white rounded-lg p-2.5 text-xs text-left shadow-sm msg-content relative"><div class="absolute -right-1 top-3 w-2 h-2 bg-blue-500 transform rotate-45"></div></div></div></div></template>
+    <template id="tpl-other-msg"><div class="flex items-start space-x-2"><img src="https://i.pravatar.cc/150?u=3" class="w-8 h-8 rounded-full border border-gray-200 sender-avatar"><div class="max-w-[85%]"><div class="flex items-center space-x-2 mb-1"><span class="text-xs text-gray-500 sender-name">Name</span></div><div class="bg-gray-100 border border-gray-200 rounded-lg p-2.5 text-xs text-gray-700 shadow-sm msg-content relative"><div class="absolute -left-1 top-3 w-2 h-2 bg-gray-100 transform rotate-45"></div></div></div></div></template>
 
     <script>
         let bizChart;
         let timerInterval;
         let activeTab = 'dashboard';
         let liveMinutesContent = "";
+        let currentGuideStep = 1; // 引导状态追踪
+
+        // --- 向导步骤配置 ---
+        const stepConfigs = {
+            1: { bg: 'bg-red-600', ring: 'ring-red-400', text: '自动感知' },
+            2: { bg: 'bg-blue-600', ring: 'ring-blue-400', text: '智能协同' },
+            3: { bg: 'bg-orange-600', ring: 'ring-orange-400', text: '决策升级' },
+            4: { bg: 'bg-purple-600', ring: 'ring-purple-400', text: '复盘恢复' }
+        };
 
         function switchTab(tabName) {
             activeTab = tabName;
@@ -603,8 +324,8 @@
             const clone = document.getElementById(tplId).content.cloneNode(true);
             if (type === 'other') {
                 clone.querySelector('.sender-name').textContent = name;
-                if (name.includes('乐乐')) clone.querySelector('.sender-avatar').src = 'https://i.pravatar.cc/150?u=12'; // Developer
-                else if (name.includes('西西')) clone.querySelector('.sender-avatar').src = 'https://i.pravatar.cc/150?u=4'; // DBA
+                if (name.includes('乐乐')) clone.querySelector('.sender-avatar').src = 'https://i.pravatar.cc/150?u=12'; 
+                else if (name.includes('西西')) clone.querySelector('.sender-avatar').src = 'https://i.pravatar.cc/150?u=4'; 
                 else if (name.includes('指挥')) clone.querySelector('.sender-avatar').src = 'https://i.pravatar.cc/150?u=11';
                 else clone.querySelector('.sender-avatar').src = 'https://i.pravatar.cc/150?u=8';
             }
@@ -616,6 +337,7 @@
             box.appendChild(clone); box.scrollTop = box.scrollHeight;
         }
 
+        // --- 核心演示场景逻辑 ---
         function scenario1() {
             const simLayer = document.getElementById('sim-layer');
             simLayer.innerHTML = `
@@ -639,59 +361,30 @@
             setTimeout(() => addLog('12:00:01', '感知：接入电话投诉 & 监控告警', 'done'), 500);
             setTimeout(() => addLog('12:00:05', 'AI自动定级: P1', 'done'), 1000);
 
-            // -----------------------------------------------------
-            // NEW: Auto Create Group Functionality
-            // -----------------------------------------------------
             setTimeout(() => {
-                // 1. Rename the Group (Chat Title)
                 document.getElementById('chat-title').innerText = "P1-20260202-核心承保系统戎机 (6)";
-
-                // 2. Add System Notification for Group Creation
                 addChat('ai', `
                     <div class="space-y-2">
-                        <div class="text-xs text-blue-600 bg-blue-50 border border-blue-100 p-2 rounded">
-                            <i class="fa-solid fa-people-group mr-1.5"></i>
-                            <b>正在创建应急群组...</b>
-                        </div>
-                        <div class="text-xs text-gray-500 border-b border-gray-200 pb-2 leading-relaxed">
-                            <i class="fa-solid fa-user-tag mr-1"></i> <b>已指定指挥官：<span class="text-blue-600">@陈总</span></b><br>
-                            <span class="text-gray-500 pl-5">已拉入关联人员：@西西(DBA) @乐乐(开发) @王五(公关)</span>
-                        </div>
+                        <div class="text-xs text-blue-600 bg-blue-50 border border-blue-100 p-2 rounded"><i class="fa-solid fa-people-group mr-1.5"></i><b>正在创建应急群组...</b></div>
+                        <div class="text-xs text-gray-500 border-b border-gray-200 pb-2 leading-relaxed"><i class="fa-solid fa-user-tag mr-1"></i> <b>已指定指挥官：<span class="text-blue-600">@陈总</span></b><br><span class="text-gray-500 pl-5">已拉入关联人员：@西西(DBA) @乐乐(开发) @王五(公关)</span></div>
                         <div class="font-bold text-red-500"><i class="fa-solid fa-bullhorn mr-1"></i> 故障通报公告</div>
-                        <ul class="list-disc pl-4 text-gray-600 space-y-1">
-                            <li><b>告警时间</b>：12:00:01</li><li><b>负责人</b>：西西(DBA)</li><li><b>故障描述</b>：核心交易链路中断，交易量跌零。</li>
-                        </ul>
+                        <ul class="list-disc pl-4 text-gray-600 space-y-1"><li><b>告警时间</b>：12:00:01</li><li><b>负责人</b>：西西(DBA)</li><li><b>故障描述</b>：核心交易链路中断，交易量跌零。</li></ul>
                     </div>
                 `);
-
                 addLog('12:00:06', 'AI自动建群: P1-20260202-核心...', 'done');
             }, 1000);
-            // -----------------------------------------------------
-
         }
 
         function scenario2() {
-            // 1. Commander initiates meeting
             addChat('other', '大家都在群里了，现在开始应急会议，同步一下情况。', '陈总(指挥官)');
-
             setTimeout(() => {
-                // 2. "Ji Yi Bi" starts
                 addChat('ai', `<div class="flex items-center space-x-2 text-blue-600 bg-blue-50 p-2 rounded border border-blue-100"><i class="fa-solid fa-microphone-lines animate-pulse"></i><span>"记一笔" 正在录音中...</span></div>`);
-
-                // 3. AI summarizes minutes (Simulate time passing)
                 setTimeout(() => {
-                    const minutesHtml = `
-                        <div class="font-bold border-b border-gray-200 pb-1 mb-2 text-purple-700"><i class="fa-solid fa-clipboard-list mr-1"></i> 实时会议纪要 & 结论</div>
-                        <div class="space-y-2 text-gray-600 text-xs">
-                            <div><b class="text-gray-800">关键结论：</b><br>1. 故障根因是 DB_PROFIT 出现慢SQL锁表。<br>2. 影响范围：核心交易链路完全中断。</div>
-                            <div><b class="text-gray-800">决策指令：</b><br>请 <span class="text-blue-600 font-bold">@西西(DBA)</span> 立即执行 Kill Session 操作。</div>
-                        </div>
-                     `;
+                    const minutesHtml = `<div class="font-bold border-b border-gray-200 pb-1 mb-2 text-purple-700"><i class="fa-solid fa-clipboard-list mr-1"></i> 实时会议纪要 & 结论</div><div class="space-y-2 text-gray-600 text-xs"><div><b class="text-gray-800">关键结论：</b><br>1. 故障根因是 DB_PROFIT 出现慢SQL锁表。<br>2. 影响范围：核心交易链路完全中断。</div><div><b class="text-gray-800">决策指令：</b><br>请 <span class="text-blue-600 font-bold">@西西(DBA)</span> 立即执行 Kill Session 操作。</div></div>`;
                     addChat('ai', minutesHtml);
                     addLog('12:05:30', '会议纪要：确认锁表，决定Kill Session', 'doing');
                     updateTimeline(3);
 
-                    // Update Doc center side
                     liveMinutesContent = "# 实时会议纪要\n\n- **关键结论**: 确认慢SQL锁表。\n- **决策**: 执行 Kill Session。";
                     const fileRoot = document.getElementById('file-list-root');
                     if (fileRoot.children.length < 5) {
@@ -699,25 +392,17 @@
                         const tempDiv = document.createElement('div'); tempDiv.innerHTML = newFileHTML; fileRoot.insertBefore(tempDiv.firstElementChild, fileRoot.children[1]);
                     }
 
-                    // Show Fault Location topology
                     const topo = document.getElementById('topology-container'); topo.classList.remove('opacity-0');
                     topo.innerHTML = `<div class="relative w-40 h-40 animate-pulse"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-red-900/50 rounded-full flex items-center justify-center border-2 border-red-500 shadow-[0_0_20px_red]"><i class="fa-solid fa-database text-red-500 text-2xl"></i></div></div>`;
-
                 }, 2000);
             }, 1000);
         }
 
         function scenario3() {
-            // 1. Ops Action
             addChat('other', '已执行 Kill Session 操作，正在观察负载回落情况。', '西西(DBA)');
-
-            // 2. AI Detects Key Op
             setTimeout(() => {
-                // Update Log/SOP
                 addLog('12:15:00', '【AI捕捉】关键操作: DBA执行Kill Session', 'doing');
                 updateTimeline(4);
-
-                // Feed back to system
                 addChat('ai', `<div class="text-green-600"><i class="fa-solid fa-check-circle mr-1"></i><b>操作已同步</b><br>监测到关键处置动作，已自动同步至故障时间轴。</div>`);
             }, 1000);
         }
@@ -728,12 +413,10 @@
             document.getElementById('topology-container').innerHTML = `<div class="w-16 h-16 bg-green-900/20 rounded-full flex items-center justify-center border-2 border-green-500"><i class="fa-solid fa-check text-green-500 text-2xl"></i></div>`;
 
             setTimeout(() => {
-                // Overlay
                 const overlay = document.createElement('div'); overlay.className = "absolute inset-0 bg-black/80 z-50 flex items-center justify-center flex-col animate-pulse";
                 overlay.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-4xl text-purple-500 mb-4"></i><h2 class="text-xl text-white font-bold">故障已恢复</h2>`;
                 document.getElementById('dashboard-grid').appendChild(overlay);
 
-                // Chat Message
                 addChat('ai', `
                     <div class="space-y-2">
                         <div class="text-green-600 font-bold"><i class="fa-solid fa-check-double mr-1"></i>故障处理结束</div>
@@ -749,7 +432,6 @@
                         </div>
                     </div>
                 `);
-
                 setTimeout(() => overlay.remove(), 2500);
             }, 1000);
         }
@@ -759,9 +441,38 @@
             if (n === 1) scenario1(); if (n === 2) scenario2(); if (n === 3) scenario3(); if (n === 4) scenario4();
         }
 
-        function completeTask(btn) {
-            btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin mr-1'></i>进行中"; btn.classList.add('opacity-70', 'cursor-not-allowed');
-            addLog('12:06:00', '西西(DBA)已受理任务', 'doing');
+        // --- 全新向导管理系统 ---
+        function activateStepButton(n) {
+            const btn = document.getElementById(`guide-btn-${n}`);
+            if(!btn) return;
+            // 添加专属颜色、呼吸特效并解锁点击
+            btn.className = `relative px-4 py-1.5 rounded-full ${stepConfigs[n].bg} text-white font-bold text-xs transition-all duration-300 ring-2 ${stepConfigs[n].ring} ring-offset-2 ring-offset-gray-900 animate-breathe cursor-pointer`;
+        }
+
+        function completeStepButton(n) {
+            const btn = document.getElementById(`guide-btn-${n}`);
+            if(!btn) return;
+            // 变成绿色的已完成打勾状态
+            btn.className = `px-4 py-1.5 rounded-full bg-green-600 text-white font-bold text-xs transition-all duration-300 opacity-80 cursor-default`;
+            btn.innerHTML = `<i class="fa-solid fa-check mr-1"></i>` + stepConfigs[n].text;
+        }
+
+        function executeStep(n) {
+            // 防呆设计：如果点的不是当前激活的步骤，直接忽略
+            if (n !== currentGuideStep) return;
+            
+            // 1. 执行真实的业务展示逻辑
+            runScenario(n);
+            
+            // 2. 将当前按钮变成“完成”状态
+            completeStepButton(n);
+            
+            // 3. 准备下一个步骤（如果有的话）
+            if (n < 4) {
+                currentGuideStep++;
+                // 稍微延迟一下亮起下一个按钮，模拟系统处理时间，体验更好
+                setTimeout(() => activateStepButton(currentGuideStep), 600);
+            }
         }
 
         window.onload = () => {
@@ -771,5 +482,4 @@
         };
     </script>
 </body>
-
 </html>
